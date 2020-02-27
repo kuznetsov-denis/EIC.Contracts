@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using EIC.Customers.Clients.Version1;
 using PipServices3.Components.Logic;
 using PipServices3.Commons.Data.Mapper;
+using PipServices3.Commons.Errors;
 
 namespace EIC.Contracts.Logic
 {
@@ -67,9 +68,25 @@ namespace EIC.Contracts.Logic
 
 		public async Task<ContractV1> UpdateContractAsync(string correlationId, ContractV1 contract)
 		{
-            await _customersConnector.UpdateCustomerAsync(correlationId, ToPublic(contract.Customer));
+            var oldContract = await _persistence.GetByIdAsync(correlationId, contract.Id);
+            if (oldContract != null)
+            {
+                contract.Customer.Id = oldContract.Customer.Id;
 
-            return await _persistence.UpdateAsync(correlationId, contract);
+                if (string.IsNullOrEmpty(contract.Customer.Id))
+                {
+                    var newCustomer = await _customersConnector.CreateCustomerAsync(correlationId, ToPublic(contract.Customer));
+                    contract.Customer.Id = newCustomer.Id;
+                }
+                else
+                {
+                    await _customersConnector.UpdateCustomerAsync(correlationId, ToPublic(contract.Customer));
+                }
+
+                return await _persistence.UpdateAsync(correlationId, contract);
+            }
+
+            throw new NotFoundException(correlationId, "CONTRACT_NOT_FOUND", string.Format($"Contract {contract.Id} was not found"));
         }
 
 		public async Task<ContractV1> DeleteContractByIdAsync(string correlationId, string id)
