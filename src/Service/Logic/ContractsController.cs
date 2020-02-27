@@ -58,15 +58,14 @@ namespace EIC.Contracts.Logic
 		}
 
 		public async Task<ContractV1> CreateContractAsync(string correlationId, ContractV1 contract)
-		{
-            var newCustomer = await _customersConnector.CreateCustomerAsync(correlationId, ToPublic(contract.Customer));
-            
-            contract.Customer.Id = newCustomer.Id;
+        {
+            contract.Id = contract.Id ?? IdGenerator.NextLong();
+            contract.Customer.Id = (await CreateCustomerAsync(correlationId, contract.Customer))?.Id;
 
             return await _persistence.CreateAsync(correlationId, contract);
         }
 
-		public async Task<ContractV1> UpdateContractAsync(string correlationId, ContractV1 contract)
+        public async Task<ContractV1> UpdateContractAsync(string correlationId, ContractV1 contract)
 		{
             var oldContract = await _persistence.GetByIdAsync(correlationId, contract.Id);
             if (oldContract != null)
@@ -75,8 +74,7 @@ namespace EIC.Contracts.Logic
 
                 if (string.IsNullOrEmpty(contract.Customer.Id))
                 {
-                    var newCustomer = await _customersConnector.CreateCustomerAsync(correlationId, ToPublic(contract.Customer));
-                    contract.Customer.Id = newCustomer.Id;
+                    contract.Customer.Id = (await CreateCustomerAsync(correlationId, contract.Customer))?.Id;
                 }
                 else
                 {
@@ -212,6 +210,14 @@ namespace EIC.Contracts.Logic
         public Contracts.Data.Version1.CustomerV1 ToInternal(Customers.Data.Version1.CustomerV1 customer)
         {
             return customer == null ? null : ObjectMapper.MapTo<Contracts.Data.Version1.CustomerV1>(customer);
+        }
+
+        private async Task<Customers.Data.Version1.CustomerV1> CreateCustomerAsync(string correlationId, Contracts.Data.Version1.CustomerV1 customer)
+        {
+            customer.Id = customer.Id ?? IdGenerator.NextLong();
+            customer.Gender = customer.Gender ?? CustomerGenderV1.Unknown;
+
+            return await _customersConnector.CreateCustomerAsync(correlationId, ToPublic(customer));
         }
     }
 }

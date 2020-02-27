@@ -59,7 +59,7 @@ namespace EIC.Contracts.Persistence
 			if (value == null) return null;
 
 			ContractV1 contract = ObjectMapper.MapTo<ContractV1>(value);
-			contract.Customer.Id = value.Id;
+			contract.Customer.Id = value.CustomerId;
 
 			return contract;
 		}

@@ -5,5 +5,5 @@ metadata:
  name: config
 data:
  environment: "stage"
- eic-customers-svc-host: "10.105.10.11"
- eic-customers-svc-port: "32728"
+ eic-customers-svc-host: "10.1.0.188"
+ eic-customers-svc-port: "8080"
