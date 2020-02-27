@@ -1,10 +1,10 @@
 version: '3.3'
 
 services:
-  app_contracts:
+  app:
     image: ${IMAGE:-eic-contracts:latest}
     links:
-      - app_customers
+      - mongo
     environment:
       - MONGO_ENABLED=true
       - MONGO_SERVICE_URI=mongodb://mongo:27017/contracts
@@ -14,17 +14,6 @@ services:
       - EIC_CUSTOMERS_SERVICE_PORT=8088
     ports:
       - "8080:8080"
-
-  app_customers:
-    image: ${IMAGE:-eic-customers:latest}
-    links:
-      - mongo
-    environment:
-      - MONGO_ENABLED=true
-      - MONGO_SERVICE_URI=mongodb://mongo:27017/customers
-      - MONGO_COLLECTION=customers
-    ports:
-      - "8088:8080"
 
   mongo:
     image: mongo:latest

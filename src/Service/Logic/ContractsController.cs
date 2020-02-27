@@ -111,7 +111,9 @@ namespace EIC.Contracts.Logic
         {
             var contract = await _persistence.GetByIdAsync(correlationId, id);
 
-            return CalcPaymentCalendar(contract.Rate, contract.Amount, contract.DateFrom, contract.DateInto);
+            return contract == null 
+                ? new List<CalendarRow>()
+                : CalcPaymentCalendar(contract.Rate, contract.Amount, contract.DateFrom, contract.DateInto);
         }
         
         /// <summary>

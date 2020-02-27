@@ -1,0 +1,57 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: eic-contracts
+ labels:
+   app: eic-contracts
+spec:
+ type: NodePort
+ ports:
+ - port: 8080
+   nodePort: 32729
+   protocol: TCP
+ selector:
+   app: eic-contracts
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: eic-contracts-deploy
+spec:
+  replicas: 1
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: eic-contracts
+    spec: 
+      containers:
+      - name: eic-contracts-pod
+        image: deniskuzn/eic-contracts:1.0.0-1-rc
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: environment
+        - name: MONGO_ENABLED
+          value: "true"
+        - name: EIC_CUSTOMERS_SERVICE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: eic-customers-svc-host
+        - name: EIC_CUSTOMERS_SERVICE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: eic-customers-svc-port
