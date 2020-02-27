@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+  test:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.test
+    image: ${IMAGE:-rc}
+    command: ${TEST_CMD:-bash -c "dotnet test test/Client.Test/Client.Test.csproj && dotnet test test/Service.Test/Service.Test.csproj"}
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_ENABLED=true
+      - MONGO_SERVICE_URI=mongodb://mongo:27017/product_configurations
+      - MONGO_COLLECTION_CONFIGURATIONS=product_configurations
+      - MONGO_COLLECTION_OPTIONS=product_configuration_options
+
+  mongo:
+    image: mongo:latest
+

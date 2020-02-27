@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>EIC.Contracts.Service</AssemblyName>
+    <RootNamespace>EIC.Contracts</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EIC.Customers.Client" Version="1.0.0" />
+    <PackageReference Include="PipServices3.Commons" Version="3.0.17" />
+    <PackageReference Include="PipServices3.Components" Version="3.0.7" />
+    <PackageReference Include="PipServices3.Container" Version="3.0.3" />
+    <PackageReference Include="PipServices3.Data" Version="3.0.2" />
+    <PackageReference Include="PipServices3.MongoDb" Version="3.1.1" />
+    <PackageReference Include="PipServices3.Rpc" Version="3.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Client\Client.csproj" />
+    <ProjectReference Include="..\Interface\Interface.csproj" />
+  </ItemGroup>
+
+</Project>
