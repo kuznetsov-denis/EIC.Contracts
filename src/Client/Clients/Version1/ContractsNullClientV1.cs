@@ -17,12 +17,12 @@ namespace EIC.Contracts.Clients.Version1
             return await Task.FromResult(new ContractV1());
         }
 
-        public async Task<ContractV1> CreateContractAsync(string correlationId, ContractV1 beacon)
+        public async Task<ContractV1> CreateContractAsync(string correlationId, ContractV1 contract)
         {
             return await Task.FromResult(new ContractV1());
         }
 
-        public async Task<ContractV1> UpdateContractAsync(string correlationId, ContractV1 beacon)
+        public async Task<ContractV1> UpdateContractAsync(string correlationId, ContractV1 contract)
         {
             return await Task.FromResult(new ContractV1());
         }

@@ -32,19 +32,19 @@ namespace EIC.Contracts.Clients.Version1
             }
         }
 
-        public async Task<ContractV1> CreateContractAsync(string correlationId, ContractV1 beacon)
+        public async Task<ContractV1> CreateContractAsync(string correlationId, ContractV1 contract)
         {
             using (Instrument(correlationId, "contracts.create_contract"))
             {
-                return await _controller.CreateContractAsync(correlationId, beacon);
+                return await _controller.CreateContractAsync(correlationId, contract);
             }
         }
 
-        public async Task<ContractV1> UpdateContractAsync(string correlationId, ContractV1 beacon)
+        public async Task<ContractV1> UpdateContractAsync(string correlationId, ContractV1 contract)
         {
             using (Instrument(correlationId, "contracts.update_contract"))
             {
-                return await _controller.UpdateContractAsync(correlationId, beacon);
+                return await _controller.UpdateContractAsync(correlationId, contract);
             }
         }
 
